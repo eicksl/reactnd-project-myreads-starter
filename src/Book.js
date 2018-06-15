@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 class Book extends React.Component {
   static propTypes = {
-    category: PropTypes.string.isRequired,
+    category: PropTypes.string,
     book: PropTypes.object.isRequired,
     moveBook: PropTypes.func.isRequired,
     deleteBook: PropTypes.func.isRequired

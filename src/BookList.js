@@ -15,10 +15,10 @@ class BookList extends React.Component {
       <div className="bookshelf-books">
         <ol className="books-grid">
         {
-          this.props.books.map(book => {
+          this.props.books.map((book, i) => {
             return (
               <Book
-                key={book.title} book={book} moveBook={this.props.moveBook}
+                key={i} book={book} moveBook={this.props.moveBook}
                 deleteBook={this.props.deleteBook} category={this.props.category}
               />
             )

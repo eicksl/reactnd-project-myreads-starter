@@ -1,7 +1,9 @@
 import React from 'react'
 import BookList from './BookList'
+import BookSearch from './BookSearch'
 // import * as BooksAPI from './BooksAPI'
 import './App.css'
+
 
 class BooksApp extends React.Component {
   state = {
@@ -11,7 +13,7 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: false,
+    showSearchPage: true,
 
     present: [
       {
@@ -55,13 +57,11 @@ class BooksApp extends React.Component {
     if (this.props.category === toCategory) {return}
     this.setState(state => ({
       [toCategory]: [...state[toCategory], book],
-      //[fromCategory]: state[category].filter(obj => obj.title !== book.title)
     }))
     this.deleteBook(book, fromCategory)
   }
 
   deleteBook = (book, category) => {
-    //const {category} = this.props
     if (category === undefined) {return}
     this.setState(state => ({
       [category]: state[category].filter(obj => obj.title !== book.title)
@@ -72,26 +72,7 @@ class BooksApp extends React.Component {
     return (
       <div className="app">
         {this.state.showSearchPage ? (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
-              <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input type="text" placeholder="Search by title or author"/>
-
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div>
+          <BookSearch moveBook={this.moveBook} deleteBook={this.deleteBook} />
         ) : (
           <div className="list-books">
             <div className="list-books-title">
@@ -122,5 +103,6 @@ class BooksApp extends React.Component {
     )
   }
 }
+
 
 export default BooksApp
