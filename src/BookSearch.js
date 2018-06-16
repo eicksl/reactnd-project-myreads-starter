@@ -3,37 +3,56 @@ import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
+import {searchTerms} from './constants'
 import {search} from './BooksAPI'
 import Book from './Book'
 
 
 class BookSearch extends React.Component {
-  state = {
-    value: '',
-    results: []
+  constructor(props) {
+    super(props)
+    this.state = {
+      value: '',
+      results: []
+    }
   }
 
   static propTypes = {
     moveBook: PropTypes.func.isRequired,
     deleteBook: PropTypes.func.isRequired
   }
+
   handleChange = event => {
-    this.setState({value: event.target.value})
+    this.setState({value: event.target.value}, () => {
+      const {value} = this.state
+      if (value) {
+        const match = new RegExp(escapeRegExp(value), 'i')
+        const searchTerm = searchTerms.find(term => match.test(term))
+        if (searchTerm === undefined) {
+          this.setState({results: []})
+        } else {
+          search(searchTerm).then(data => this.setState({results: data}))
+        }
+      } else {
+        this.setState({results: []})
+      }
+    })
   }
-  handleSubmit = event => {
-    event.preventDefault();
-    search(this.state.value).then(data => this.setState({results: data}))
-    //search(this.state.value).then(data => console.log(data))
+
+  componentDidMount() {
+    document.getElementById('search-bar').focus()
   }
+
   render() {
     return (
       <div className="search-books">
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
           <div className="search-books-input-wrapper">
-            <form onSubmit={this.handleSubmit}>
-              <input type="text" placeholder="Search by title or author" value={this.state.value} onChange={this.handleChange}/>
-            </form>
+            <input
+              id="search-bar" type="text" placeholder="Search by title or author"
+              value={this.state.value} onChange={this.handleChange}
+            />
           </div>
         </div>
         <div className="search-books-results">
@@ -43,7 +62,7 @@ class BookSearch extends React.Component {
               const book = {
                 title: bookData.title ? bookData.title : 'Untitled',
                 author: bookData.authors ? bookData.authors[0] : 'Anonymous',
-                image: bookData.imageLinks.thumbnail
+                image: bookData.imageLinks ? bookData.imageLinks.thumbnail : 'icons/placeholder.png'
               }
               return (
                 <Book key={i} book={book} moveBook={this.props.moveBook} deleteBook={this.props.deleteBook} />

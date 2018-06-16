@@ -9,6 +9,7 @@ class Book extends React.Component {
     moveBook: PropTypes.func.isRequired,
     deleteBook: PropTypes.func.isRequired
   }
+  
   render() {
     const book = this.props.book
     const category = this.props.category

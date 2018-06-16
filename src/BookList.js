@@ -10,6 +10,7 @@ class BookList extends React.Component {
     moveBook: PropTypes.func.isRequired,
     deleteBook: PropTypes.func.isRequired
   }
+  
   render() {
     return (
       <div className="bookshelf-books">

@@ -19,10 +19,12 @@ class BooksApp extends React.Component {
     if (this.props.category === toCategory) {return}
     this.setState(state => ({
       [toCategory]: [...state[toCategory], book],
-      [fromCategory]: state[fromCategory].filter(obj => obj.title !== book.title)
     }), () => {
       localStorage.setItem('data', JSON.stringify(this.state))
     })
+    if (fromCategory !== undefined) {
+      this.deleteBook(book, fromCategory)
+    }
   }
 
   deleteBook = (book, category) => {
