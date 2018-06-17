@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
-import {searchTerms} from './constants'
+import {searchTerms} from './util'
 import {search} from './BooksAPI'
 import Book from './Book'
 

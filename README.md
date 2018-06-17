@@ -1,6 +1,6 @@
 # MyReads Project
 
-Forked from the [Udacity Starter Template](https://github.com/udacity/reactnd-project-myreads-starter)
+Forked from the [Udacity Starter Template](https://github.com/udacity/reactnd-project-myreads-starter).
 
 A web app allowing users to search for and manage their favorite books.
 
@@ -19,6 +19,8 @@ To simplify your development process, Udacity has provided a backend server for 
 * [`getAll`](#getall)
 * [`update`](#update)
 * [`search`](#search)
+
+You must send an `Authorization` header string with each request which is used to access the appropriate data for your app. If this string is unrecognized by the server, a new data-space will be allocated on the server corresponding to this string and will contain several default books.
 
 ### `getAll`
 
@@ -40,7 +42,7 @@ update(book, shelf)
 ```
 
 * book: `<Object>` containing at minimum an `id` attribute
-* shelf: `<String>` contains one of ["wantToRead", "currentlyReading", "read"]  
+* shelf: `<String>` contains one of ["wantToRead", "currentlyReading", "read"], or any other non-empty string to remove the book completely   
 * Returns a Promise which resolves to a JSON object containing the response data of the POST request
 
 ### `search`

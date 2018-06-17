@@ -2,26 +2,43 @@ import React from 'react'
 import {Route, Link} from 'react-router-dom'
 import BookList from './BookList'
 import BookSearch from './BookSearch'
-import {defaultState} from './constants'
+import {getAll, update} from './BooksAPI'
 import './App.css'
 
 
 class BooksApp extends React.Component {
   constructor() {
     super()
-    if (localStorage.getItem('data') === null) {
-      localStorage.setItem('data', JSON.stringify(defaultState))
+    if (localStorage.getItem('data') !== null) {
+      this.state = JSON.parse(localStorage.getItem('data'))
+    } else {
+      this.state = {
+        read: [],
+        currentlyReading: [],
+        wantToRead: [],
+        idObj: {}
+      }
+      getAll().then(books => {
+        for (const book of books) {
+          this.setState(state => ({
+            [book.shelf]: [...state[book.shelf], book],
+            idObj: {...state.idObj, [book.id]: book.shelf}
+          }))
+        }
+        localStorage.setItem('data', JSON.stringify(this.state))
+      })
     }
-    this.state = JSON.parse(localStorage.getItem('data'))
   }
 
   moveBook = (book, fromCategory, toCategory) => {
-    if (this.props.category === toCategory) {return}
+    if (fromCategory === toCategory) {return}
     this.setState(state => ({
       [toCategory]: [...state[toCategory], book],
+      idObj: {...state.idObj, [book.id]: toCategory}
     }), () => {
       localStorage.setItem('data', JSON.stringify(this.state))
     })
+    update(book, toCategory)
     if (fromCategory !== undefined) {
       this.deleteBook(book, fromCategory)
     }
@@ -30,10 +47,12 @@ class BooksApp extends React.Component {
   deleteBook = (book, category) => {
     if (category === undefined) {return}
     this.setState(state => ({
-      [category]: state[category].filter(obj => obj.title !== book.title)
+      [category]: state[category].filter(obj => obj.title !== book.title),
+      idObj: {...state.idObj, [book.id]: undefined}
     }), () => {
       localStorage.setItem('data', JSON.stringify(this.state))
     })
+    update(book, 'none')
   }
 
   render() {
@@ -51,15 +70,15 @@ class BooksApp extends React.Component {
               <div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Currently Reading</h2>
-                  <BookList category="present" books={this.state.present} moveBook={this.moveBook} deleteBook={this.deleteBook} />
+                  <BookList category="currentlyReading" books={this.state.currentlyReading} moveBook={this.moveBook} deleteBook={this.deleteBook} />
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Want to Read</h2>
-                  <BookList category="future" books={this.state.future} moveBook={this.moveBook} deleteBook={this.deleteBook} />
+                  <BookList category="wantToRead" books={this.state.wantToRead} moveBook={this.moveBook} deleteBook={this.deleteBook} />
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Read</h2>
-                  <BookList category="past" books={this.state.past} moveBook={this.moveBook} deleteBook={this.deleteBook} />
+                  <BookList category="read" books={this.state.read} moveBook={this.moveBook} deleteBook={this.deleteBook} />
                 </div>
               </div>
             </div>

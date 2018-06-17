@@ -3,33 +3,55 @@ import PropTypes from 'prop-types'
 
 
 class Book extends React.Component {
+  constructor(props) {
+    super(props)
+    if (props.book.shelf === undefined) {
+      this.state = {shelf: 'none'}
+    } else {
+      this.state = {shelf: props.book.shelf}
+    }
+  }
+
   static propTypes = {
-    category: PropTypes.string,
+    category: PropTypes.string.isRequired,
     book: PropTypes.object.isRequired,
     moveBook: PropTypes.func.isRequired,
     deleteBook: PropTypes.func.isRequired
   }
-  
+
+  handleChange = event => {
+    this.setState({shelf: event.target.value})
+  }
+
   render() {
-    const book = this.props.book
-    const category = this.props.category
+    const {book, category} = this.props
     return (
       <li>
         <div className="book">
           <div className="book-top">
-            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.image})` }}></div>
+            <div
+              className="book-cover"
+              style={{
+                width: 128, height: 193,
+                backgroundImage: `url(${book.imageLinks ? book.imageLinks.thumbnail : 'icons/placeholder.png'})`
+              }}>
+            </div>
             <div className="book-shelf-changer">
-              <select>
+              <select readOnly value={this.state.shelf}>
                 <option value="move" disabled>Move to...</option>
-                <option value="currentlyReading" onClick={ () => this.props.moveBook(book, category, "present") }>Currently Reading</option>
-                <option value="wantToRead" onClick={ () => this.props.moveBook(book, category, "future") }>Want to Read</option>
-                <option value="read" onClick={ () => this.props.moveBook(book, category, "past") }>Read</option>
-                <option value="none" onClick={ () => this.props.deleteBook(book, this.props.category) }>None</option>
+                <option value="currentlyReading" onClick={ () => this.props.moveBook(book, category, "currentlyReading") }>Currently Reading</option>
+                <option value="wantToRead" onClick={ () => this.props.moveBook(book, category, "wantToRead") }>Want to Read</option>
+                <option value="read" onClick={ () => this.props.moveBook(book, category, "read") }>Read</option>
+                <option value="none" onClick={ () => this.props.deleteBook(book, category) }>None</option>
               </select>
             </div>
           </div>
-          <div className="book-title">{book.title}</div>
-          <div className="book-authors">{book.author}</div>
+          <div className="book-title">
+            {book.title ? book.title : 'Untitled'}
+          </div>
+          <div className="book-authors">
+            {book.authors ? book.authors[0] : 'Anonymous'}
+          </div>
         </div>
       </li>
     )
