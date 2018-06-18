@@ -1,7 +1,3 @@
-import React from 'react'
-import Book from './Book'
-
-
 export const searchTerms = [
   'Android', 'Art', 'Artificial Intelligence', 'Astronomy', 'Austen', 'Baseball',
   'Basketball', 'Bhagat', 'Biography', 'Brief', 'Business', 'Camus', 'Cervantes',
@@ -16,18 +12,3 @@ export const searchTerms = [
   'Tale', 'Thrun', 'Time', 'Tolstoy', 'Travel', 'Ultimate', 'Virtual Reality',
   'Web Development', 'iOS'
 ]
-
-// stateless functional React component
-export const MapBookData = props => {
-  const mappedBooks = props.booksArray.map((book, i) => {
-    //const book = {
-    //  title: bookData.title ? bookData.title : 'Untitled',
-    //  author: bookData.authors ? bookData.authors[0] : 'Anonymous',
-    //  image: bookData.imageLinks ? bookData.imageLinks.thumbnail : 'icons/placeholder.png'
-    //}
-    return (
-      <Book key={i} book={book} moveBook={props.moveBook} deleteBook={props.deleteBook} category={props.category} />
-    )
-  })
-  return <ol className="books-grid">{mappedBooks}</ol>
-}

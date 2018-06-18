@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
-import {searchTerms} from './util'
+import {searchTerms} from './constants'
 import {search} from './BooksAPI'
 import Book from './Book'
 
@@ -18,7 +18,8 @@ class BookSearch extends React.Component {
 
   static propTypes = {
     moveBook: PropTypes.func.isRequired,
-    deleteBook: PropTypes.func.isRequired
+    deleteBook: PropTypes.func.isRequired,
+    idObj: PropTypes.object.isRequired
   }
 
   handleChange = event => {
@@ -43,6 +44,7 @@ class BookSearch extends React.Component {
   }
 
   render() {
+    const {idObj} = this.props
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -56,18 +58,21 @@ class BookSearch extends React.Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-          {
-            this.state.results.map((bookData, i) => {
-              const book = {
-                title: bookData.title ? bookData.title : 'Untitled',
-                author: bookData.authors ? bookData.authors[0] : 'Anonymous',
-                image: bookData.imageLinks ? bookData.imageLinks.thumbnail : 'icons/placeholder.png'
-              }
-              return (
-                <Book key={i} book={book} moveBook={this.props.moveBook} deleteBook={this.props.deleteBook} />
-              )
-            })
-          }
+            {
+              this.state.results.map(book => {
+                if (book.id in idObj && idObj[book.id] !== undefined) {
+                  book.shelf = idObj[book.id]
+                } else {
+                  book.shelf = 'none'
+                }
+                return (
+                  <Book
+                    key={book.id} book={book} moveBook={this.props.moveBook}
+                    deleteBook={this.props.deleteBook} category={book.shelf}
+                  />
+                )
+              })
+            }
           </ol>
         </div>
       </div>

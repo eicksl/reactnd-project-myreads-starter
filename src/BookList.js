@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Book from './Book'
-import {MapBookData} from './util'
 
 
 class BookList extends React.Component {
@@ -17,10 +16,10 @@ class BookList extends React.Component {
       <div className="bookshelf-books">
         <ol className="books-grid">
           {
-            this.props.books.map((book, i) => {
+            this.props.books.map(book => {
               return (
                 <Book
-                  key={i} book={book} moveBook={this.props.moveBook}
+                  key={book.id} book={book} moveBook={this.props.moveBook}
                   deleteBook={this.props.deleteBook} category={this.props.category}
                 />
               )

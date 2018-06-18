@@ -163,6 +163,7 @@ body, .app {
 option:checked {
   box-shadow: 0 0 0 3px lime;
   color: #2e7d32;
+  font-weight: bold;
 }
 
 /* book cover */
