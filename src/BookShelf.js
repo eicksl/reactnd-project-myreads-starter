@@ -11,13 +11,14 @@ class BookShelf extends React.Component {
   }
 
   render() {
+    const category = ['currentlyReading', 'wantToRead', 'read']
     const shelf = (
       this.props.booksMatrix.map((books, i) => {
         return (
           <div key={i} className="bookshelf">
             <h2 className="bookshelf-title">Read</h2>
             <BookList
-              category={books[0].shelf} books={books}
+              category={category[i]} books={books}
               moveBook={this.props.moveBook} deleteBook={this.props.deleteBook}
             />
           </div>
